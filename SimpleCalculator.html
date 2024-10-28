@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+
+    <style>
+        *{
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        body{
+            background-color: blanchedalmond;
+        }
+        .main{
+            background-color: darksalmon;
+            width: 75%;
+            padding: 10px;
+            margin-left: 8%;
+            text-align: center;
+            border-radius: 30px;
+        }
+        .main h1{
+            font-size: 45px;
+            color: white;
+        }
+        .display{
+            background-color: beige;
+            margin-top: 5%;
+            margin-left: 11%;
+            width: 75%;
+            border-radius: 15px;
+        }
+        .display h2{
+            font-size: 30px;
+            text-align: center;
+        }
+
+        .buttons{
+            background-color: aliceblue;
+            border-radius: 15px;
+            width: 40%;
+            margin-left: 27.5%;
+            padding: 17px;
+        }
+        #btn{
+            height: 70px;
+            width: 70px;
+            margin: 5px;
+            border-radius: 10px;
+            background-color: antiquewhite;
+        }
+        #btn-b{
+            height: 70px;
+            width: 150px;
+            margin: 5px;
+            border-radius: 10px;
+            background-color: antiquewhite;
+        }
+        #btn:hover, #btn-b:hover{
+            background-color: rgb(175, 168, 159);
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1>Online Calculator</h1>
+
+        <div class="display">
+            <h3 id="numbers">0+0</h3>
+            <h2 id="Answer">0</h2>
+        </div>
+
+        <div class="buttons">
+            <div class="row1">
+                <button id="btn" onclick="clearAns()">C</button>
+                <button id="btn" onclick="deleteDigit()">X</button>
+                <button id="btn" onclick="setOperation('%')">%</button>
+                <button id="btn" onclick="setOperation('/')">/</button>                
+            </div>
+            <div class="row2">
+                <button id="btn" onclick="insertNumber(7)">7</button>
+                <button id="btn" onclick="insertNumber(8)">8</button>
+                <button id="btn" onclick="insertNumber(9)">9</button>
+                <button id="btn" onclick="setOperation('*')">*</button>
+            </div>
+            <div class="row3">
+                <button id="btn" onclick="insertNumber(4)">4</button>
+                <button id="btn" onclick="insertNumber(5)">5</button>
+                <button id="btn" onclick="insertNumber(6)">6</button>
+                <button id="btn" onclick="setOperation('-')">-</button>                
+            </div>
+            <div class="row4">
+                <button id="btn" onclick="insertNumber(1)">1</button>
+                <button id="btn" onclick="insertNumber(2)">2</button>
+                <button id="btn" onclick="insertNumber(3)">3</button>
+                <button id="btn" onclick="setOperation('+')">+</button>
+            </div>
+            <div class="row5">
+                <button id="btn-b" onclick="insertNumber(0)">0</button>
+                <button id="btn" onclick="insertNumber(0, '.')">.</button>
+                <button id="btn" onclick="showAnswer()">=</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var number1 = 0;
+        var number2 = 0;
+        var op = "+";
+        var answer = 0;
+        var currNumSC = 1;
+        var isDecimal = false;
+
+        var currDisplay = document.getElementById("numbers");
+        var ans = document.getElementById("Answer");
+
+        function setDisplay(){
+            setAnswer()
+
+            currDisplay.innerHTML = number1+op+number2;
+            /*ans.innerHTML = answer;*/
+        };
+
+        function showAnswer(){
+            ans.innerHTML = answer;
+        }
+
+        function setOperation(operation){
+            op = operation;
+            currNumSC = 3-currNumSC
+            setDisplay();
+            isDecimal = false
+        }
+
+        function clearAns(){
+            number1 = 0;
+            number2 = 0;
+            op = "+";
+            currNumSC = 1;
+            isDecimal = false
+
+            setDisplay()
+        }
+
+        function deleteDigit(){
+            if (currNumSC == 1){
+                if ((number1/10)>1){
+                    var numberToConvert = ""+number1
+                    numberToConvert = numberToConvert.substring(0, numberToConvert.length-1)
+                    number1 = Number(numberToConvert)
+                }
+                else{
+                    number1 = 0
+                }
+            }
+            else{
+                if (currNumSC == 2){
+                    if ((number2/10)>1){
+                        var numberToConvert = ""+number2
+                        numberToConvert = numberToConvert.substring(0, numberToConvert.length-1)
+                        number2 = Number(numberToConvert)
+                    }
+                    else{
+                        number2 = 0
+                    }
+                }
+                else{
+                    answer = "Unknown answer"
+                }
+            }
+
+            setDisplay()
+        }
+
+        function setAnswer(){
+            if (op == "+"){
+                answer = number1+number2;
+            }
+            else{
+                if (op == "-"){
+                    answer = number1-number2;
+                }
+                else{
+                    if (op == "*"){
+                        answer = number1*number2;
+                    } 
+                    else{
+                        if (op == "/"){
+                            answer = number1/number2;
+                        }
+                        else{
+                            if (op == "%"){
+                                answer = number1%number2;
+                            }
+                            else{
+                                answer = "Unknown operation"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function insertNumber(numberToAdd, decimal){
+            if (currNumSC==1){
+                if (decimal == '.' && isDecimal == false){
+                    number1 = ""+number1+"."+1;
+                    number1 = Number(number1);
+                    isDecimal = true
+                }
+                else{
+                    number1 = ""+number1+numberToAdd;
+                    number1 = Number(number1);
+                }                
+            }
+            else{
+                if (currNumSC==2){
+                    if (decimal == '.' && isDecimal == false){
+                        number2 = ""+number2+"."+1;
+                        number2 = Number(number2);
+                        isDecimal = true
+                    }
+                    else{
+                        number2 = ""+number2+numberToAdd;
+                        number2 = Number(number2);
+                    }
+                }
+                else{
+                    answer = "Error occured!"
+                }
+            }
+
+            setDisplay()
+        }
+
+        setDisplay()
+    </script>
+</body>
+</html>
